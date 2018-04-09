@@ -1,0 +1,3 @@
+使用toolbar则必须要屏蔽ActionBar
+在AndroidManifest.xml文件中修改对应的Activity的android:theme为：
+android:theme="@style/AppTheme.NoActionBar"

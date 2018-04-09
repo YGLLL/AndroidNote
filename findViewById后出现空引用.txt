@@ -1,0 +1,18 @@
+findViewById()是一个简写
+它的全称应为this.findViewById()
+this表示的是当前对象
+
+使用findViewById()时，当前对象必须载入相对应XML
+并且要使用当前对象的findViewById()
+
+例如
+View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.prepare, null);
+                final EditText usl = (EditText)view.findViewById(R.id.url);
+                usl.setText(webview.getUrl());
+这是正确的写法
+
+View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.prepare, null);
+                final EditText usl = (EditText)findViewById(R.id.url);
+                usl.setText(webview.getUrl());
+这是错误的写法，因为调用的不是当前对象的findViewById()
+会引发空指针错误

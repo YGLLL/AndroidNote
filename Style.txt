@@ -1,0 +1,21 @@
+Style个人理解就是view的一些属性的集合，那么一系列view（例如TextVIew），只要是要该style那么就都有相同的内容，如 文字的大少，颜色等，方便修改
+由此可以见，相关view的属性包括style中的所有的属性，view中自己还定义了的就使用view字定义的
+style中的属性，在view中没有作用的会自动忽略掉  
+style的继承
+    1.加上parent
+
+<style name="TextViewStyle2" parent="@style/TextViewStyle1">
+        <item name="Android:layout_width">400dp</item>
+    </style>
+
+2.加点
+
+    <style name="TextViewStyle1.test">
+        <item name="android:layout_width">800dp</item>
+    </style>
+
+  还可以多继承：
+
+<style name="TextViewStyle1.test.test">
+        <item name="android:layout_width">1200dp</item>
+    </style>

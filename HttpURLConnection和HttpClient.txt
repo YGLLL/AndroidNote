@@ -1,0 +1,7 @@
+HttpClient 
+安卓2.2以前用的很嗨，
+但是由于android studio已经不支持和高版本上使用起来不如的 HttpURLConnection 好用的原因，
+我们稍微这里说过就好，不对其进行继续说明
+HttpURLConnection 
+2.2以前他也有，但是有bug，但是2.3以后慢慢就好用了，人们也用得嗨了，
+android studio支持，所以我们主要讲话这个家伙。

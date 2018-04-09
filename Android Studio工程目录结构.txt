@@ -1,0 +1,48 @@
+Android Studio工程目录结构
+.gradle 是gradle运行以后生成的缓存文件夹。
+
+.idea 是android studio/Intellij IDEA工程打开以后生成的工作环境配置文件夹
+，包括一些copyright复制版权,编译，编码语言，运行配置，工作空间等配置。
+
+app 文件夹是你的application module ,其中包含你的源码src以及编译生成的东西
+build文件夹(这个里面又有四个文件夹，其中outputs为生成的apk包存放的地方
+，其它，另外generated文件夹也会有某些aidl生成的java文件在这里面)，
+以及libs库
+
+build 文件夹为编译时的缓存文件夹，每次运行时都会生成，同时在运行了gradle
+clean 的任务以后它会被删除清理掉。有一个generated文件夹和intermediates文件夹
+，在我的工程中，也没有看到什么重要的东西。
+
+gradle 文件夹中包含的是gradle-wrapper.jar文件，通过配置其中的
+gradle-wrapper.properties中的distributionUrl 可以给你的项目指定需要使用
+的gradle版本，这个是个远程的地址，我的是
+https://services.gradle.org/distributions/gradle-2.10-all.zip
+
+.gitignore 文件为git版本控制的忽略清单。
+
+gradle.build为project全局的配置
+
+gradle.properties 为gradle的参数配置，其中有注释的java虚拟机的内存大小
+等配置，有使用的repositories仓库和依赖的gradle脚本。
+
+*.iml 文件为Android Studio/ Intellij IDEA为每一个module生成的配置文件
+模块的配置如编译文件夹路径，使用jdk版本等。
+
+gradlew gradlew.bat 是gradle任务的脚本命令，很长，估计是Linux上面可以
+用脚本来设置
+
+local.properties 中配置个人电脑环境中的配置，其实一般也就是SDK在本地电脑
+的位置
+
+settings.gradle 文件中可指定project目录中的任何一个文件夹为gradle的module,
+比如一般默认的指定为include ':app'
+
+在Android Studio中的终端Terminal中运行./gradlew clean 命令，可以把module中
+的build文件夹删除。windows中不用输入“./”
+
+有些文件是可以删除的，不必一起带着走的，是可以通过
+build.gradle来生成的，
+如.gradle .idea build *.iml等文件。
+每次当你分发给别人的时候，
+其他人可以使用open ,
+选中project中的build.gradle文件，来构建成一份完整的gradle工程

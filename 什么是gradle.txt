@@ -1,0 +1,11 @@
+一个APP有多个版本，Release版、Debug版、Test版。
+甚至针对不同APP Store都有不同的版本。
+比如部落冲突这个游戏，会有百度，豌豆荚，91等不同的版本
+对这些不同的版本所配置的资源（代码）是不同的
+gradle可以使你方便的配置不同的资源，生成不同的版本
+
+更新gradle
+cmd执行
+gradlew build
+
+Android Studio中导入包需要在gradle中声明

@@ -1,0 +1,79 @@
+Android Design Support Library 给开发者带来了一些重要的 Material Design 组件，并且向下兼容到 Android 2.1， Navigation View 就是其中之一，可用于方便地创建导航抽屉。
+
+效果如下：
+
+
+因为需要向下兼容，所以以下内容的 Activity 均继承于 AppCompatActivity ，使用的主题的父主题均为 AppCompat 的主题。
+
+基本步骤
+
+通过 Navigation View 创建导航抽屉首先自然需要引入这个支持包：
+
+compile 'com.android.support:design:22.2.0'
+布局文件中加入以下代码：
+
+<android.support.v4.widget.DrawerLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+    <!-- 需要呈现的内容 -->
+    <android.support.design.widget.NavigationView
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:layout_gravity="start"
+	    app:headerLayout="@layout/drawer_header"
+	    app:menu="@menu/drawer"/>
+</android.support.v4.widget.DrawerLayout>
+其中 app:headerLayout 用于指定一个任意的布局，作为导航抽屉的顶部，如效果图中的紫色带 Username 字样部分。
+
+而 app:menu 用于指定导航抽屉的菜单项，具体代码如下：
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<group android:checkableBehavior="single">
+		<item
+			android:id="@+id/nav_home"
+			android:icon="@drawable/ic_dashboard"
+			android:title="Home" />
+		<item
+			android:id="@+id/nav_messages"
+			android:icon="@drawable/ic_event"
+			android:title="Messages" />
+		<item
+			android:id="@+id/nav_friends"
+			android:icon="@drawable/ic_headset"
+			android:title="Friends" />
+		<item
+			android:id="@+id/nav_discussion"
+			android:icon="@drawable/ic_forum"
+			android:title="Discussion" />
+	</group>
+	<item android:title="Sub items">
+		<menu>
+			<item
+				android:icon="@drawable/ic_dashboard"
+				android:title="Sub item 1" />
+			<item
+				android:icon="@drawable/ic_forum"
+				android:title="Sub item 2" />
+		</menu>
+	</item>
+</menu>
+其中通过 <group android:checkableBehavior="single"> 设定一组菜单项为至多只有一个可被选中，非常适合用于通过导航抽屉切换呈现的 Fragment，若需要默认选中一个菜单项则只需要给指定 item 加上 android:checked="true" 即可。并且可以通过子菜单的形式显示分割线和子标题。
+
+到此为止布局文件部分就完成了，接下来只需要在Activity中设置监听器即可：
+
+mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+if (navigationView != null) {
+	navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+		@Override
+		public boolean onNavigationItemSelected(MenuItem menuItem) {
+			//切换相应 Fragment 等操作
+			menuItem.setChecked(true);
+			mDrawerLayout.closeDrawers();
+			return false;
+		}
+	});
+}
+至此导航抽屉就基本完成了，但 Material Design 中建议导航抽屉应该在 status bar 上也显示，而 Android 5.0 及以上版本支持这一特性，因此还需要进一步处理。

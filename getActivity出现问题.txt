@@ -1,0 +1,66 @@
+一、引入
+
+??你是不是经常遇到在fragment中调用findViewById方法寻找fragment布局文件中的控件返回null的现象。我之前也遇到了这个问题，虽然后来解决了，但是心中一直有疑惑，最近有时间停下来，结合别人的解答和自己的思考，对这个问题进行彻底的梳理。
+
+二、使用getActivity().findViewById
+
+1、getActivity的介绍
+
+??Fragment中有一个getActivity()的方法。返回与Fragment关联的Activity对象（通过该对象可以查找activity中的控件们（findViewById()））。当fragment生命周期结束并销毁时，getActivity()返回的会是null。onAttach和onDetach之间的其他生命周期方法都可以调用getActivity方法。
+
+2、在Fragment的oncreateview()方法中使用
+
+1）代码：
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //从数据库中得到黑名单的集合
+        super.onActivityCreated(savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_dark, container, false);
+        infoList = DbManager.getInstance().getDarkList();
+        listView = (ListView) getActivity().findViewById(R.id.dark);
+        adapter = new DarkAdapter(getActivity(), infoList);
+        listView.setAdapter(adapter);
+        registerForContextMenu(listView);
+        return view;
+    }
+2）结果：
+
+空指针异常
+
+3）分析：
+
+??因为onCreateView时，fragment已经和activity绑定了，所以说getActivity是有值的，但是我们返回值为空，说明在activity的子控件中找不到fragment的控件——>说明fragment的控件还没有加到activity中。
+
+??为什么呢？原因如下：
+
+View view = inflater.inflate(R.layout.fragment_dark, Container, false);
+
+??该方法的第二个参数的意思是：root Optional view to be the parent of the generated hierarchy (if attachToRoot is true), or else simply an object that provides a set of LayoutParams values for root of the returned hierarchy (if attachToRoot is false.)
+
+??该方法的第三个参数的意思是：Whether the inflated hierarchy should be attached to the root parameter? If false, root is only used to create the correct subclass of LayoutParams for the root view in the XML.
+
+??在本代码中第三个参数为false，说明当前fragment的布局文件并没有被加到activity的布局中，所以你当然无法在activity中找到fragment的组件了。但是一旦onCreateView执行完了，系统就把fragment的布局文件加入到activity的布局文件中了。所以只要在onCreateView方法之后，我们通过getActivity().findViewById都是可以得到fragment的子控件的。所以下面的3结果就是对的。
+
+??有的人可能有疑问了：如果我们把false改为true，这样是不是就可以在onCreateView使用getActivity().findViewById找到fragment的子控件了。事实上，这样做会产生异常，你把fragment的布局文件加到activity的布局一次，但是当onCreateView方法执行完之后，返回View，系统又执行了一次把fragment的布局文件加到activity的布局，就会产生错误。
+
+3、在Fragment的onstart()方法中使用
+
+1）代码：
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        infoList = DbManager.getInstance().getDarkList();
+        listView = (ListView) getActivity().findViewById(R.id.dark);
+        adapter = new DarkAdapter(getActivity(), infoList);
+        listView.setAdapter(adapter);
+        registerForContextMenu(listView);
+    }
+2）结果：
+
+正常
+
+3）分析：
+
+理解了2的分析，这里就没有问题了。
